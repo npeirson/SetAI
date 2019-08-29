@@ -10,7 +10,7 @@ import argparse
 import imutils
 import itertools
 
-model = load_model('SetNet_0827.h5')
+model = load_model('SetNet_0828.h5')
 
 def apply_brightness_contrast(input_img, brightness = -10, contrast = 64):
     if brightness != 0:

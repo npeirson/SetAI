@@ -6,3 +6,4 @@ Image processing through OpenCV, neural network through Keras.
 [This is a kernel](https://www.kaggle.com/kwisatzhaderach/setnet-trainer?scriptVersionId=19703762) demonstrating the network architecture and training method.
 
 ![screen grab](set_example.jpg)
+![another one](set_example2.jpg)
