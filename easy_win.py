@@ -1,7 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 import os
 import cv2
@@ -11,7 +10,7 @@ import argparse
 import imutils
 import itertools
 
-model = load_model('SetNet_mnv2.h5')
+model = load_model('SetNet_0827.h5')
 
 def apply_brightness_contrast(input_img, brightness = -10, contrast = 64):
     if brightness != 0:
@@ -50,21 +49,21 @@ def check_rotation(temp_img):
     if (temp_img.shape[0] > temp_img.shape[1]):
         temp_img = rotate_image(temp_img,90)
         temp_img = apply_brightness_contrast(temp_img)
-    return preprocess_input(cv2.medianBlur(temp_img,5))
+    return temp_img
 
 def translate_results(results):
-	colors,nums,shades,shapes = [],[],[],[]
-	for result in results:
-		colors.append(['red','green','blue'][np.argmax(result[:,:3])]) # BGR
-		nums.append(['one','two','three'][np.argmax(result[:,3:6])])
-		shades.append(['empty','partial','full'][np.argmax(result[:,6:9])])
-		shapes.append(['diamond','oval','squiggle'][np.argmax(result[:,9:12])])
-	this_panda = pd.DataFrame()
-	this_panda['colors'] = colors
-	this_panda['nums'] = nums
-	this_panda['shades'] = shades
-	this_panda['shapes'] = shapes
-	return this_panda
+    colors,nums,shades,shapes = [],[],[],[]
+    for result in results:
+        colors.append(['blue','green','red'][np.argmax(result[0][:])])
+        nums.append(['one','two','three'][np.argmax(result[1][:])])
+        shades.append(['empty','partial','full'][np.argmax(result[2][:])])
+        shapes.append(['diamond','oval','squiggle'][np.argmax(result[3][:])])
+    this_panda = pd.DataFrame()
+    this_panda['colors'] = colors
+    this_panda['nums'] = nums
+    this_panda['shades'] = shades
+    this_panda['shapes'] = shapes
+    return this_panda
 
 def sort_contours(cnts, method="left-to-right"):
     reverse = False
@@ -137,10 +136,12 @@ while True:
         						(255,255,255),1,cv2.LINE_AA)
 
         column_permutations = list(itertools.permutations(['colors','counts','shades','shapes']))
+        '''
         for permutation in column_permutations:
             if (results.duplicated(permutation[:-1]).value_counts()[1] >= 3):
                 print('WIN')
                 break
+                '''
 
     cv2.imshow("test", frame)
     if not ret:
