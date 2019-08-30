@@ -10,7 +10,9 @@ import argparse
 import imutils
 import itertools
 
-model = load_model('SetNet_0828.h5')
+from win_condition import *
+
+model = load_model('SetNet_0829.h5')
 
 def apply_brightness_contrast(input_img, brightness = -10, contrast = 64):
     if brightness != 0:
@@ -121,7 +123,7 @@ while True:
     returned_coords = box_extraction(frame, "clipped/")
     subframes = []
     for coord in returned_coords:
-        frame = cv2.rectangle(frame,(coord[0],coord[1]),(coord[0]+coord[2],coord[1]+coord[3]),(255,0,0),3)
+        #frame = cv2.rectangle(frame,(coord[0],coord[1]),(coord[0]+coord[2],coord[1]+coord[3]),(255,0,0),3) # for debugging
         new_img = frame[coord[1]:coord[1]+coord[3], coord[0]:coord[0]+coord[2]]
         subframe = check_rotation(new_img)
         subframes.append(subframe)
@@ -130,13 +132,26 @@ while True:
         for sf in subframes:
             results.append(model.predict(np.expand_dims(cv2.resize(sf,(100,64)),0)))
         results = translate_results(results)
+        win_cards = check_set(results)
+        if win_cards:
+            win_coords = []
+            for i in win_cards:
+                win_coords.append(returned_coords[i])
+                for i,coord in enumerate(win_coords):
+                    frame = cv2.rectangle(frame,(coord[0],coord[1]),(coord[0]+coord[2],coord[1]+coord[3]),(127,255,0),2)
+                    #frame = cv2.putText(frame," ".join(results.iloc[i].values),(coord[0],coord[1]+coord[3]), cv2.FONT_HERSHEY_SIMPLEX, 0.3,(255,255,255),1,cv2.LINE_AA) # for debugging
+
+
+        '''
+        # outlines all cards, for checking model performance
         for i,coord in enumerate(returned_coords):
         	frame = cv2.putText(frame," ".join(results.iloc[i].values),(coord[0],coord[1]+coord[3]), 
         						cv2.FONT_HERSHEY_SIMPLEX, 0.3,
         						(255,255,255),1,cv2.LINE_AA)
-
-        column_permutations = list(itertools.permutations(['colors','counts','shades','shapes']))
         '''
+
+        '''
+        column_permutations = list(itertools.permutations(['colors','counts','shades','shapes']))
         for permutation in column_permutations:
             if (results.duplicated(permutation[:-1]).value_counts()[1] >= 3):
                 print('WIN')
