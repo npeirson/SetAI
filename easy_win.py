@@ -12,7 +12,7 @@ import itertools
 
 from win_condition import *
 
-model = load_model('SetNet_0829.h5')
+model = load_model('SetNet_0901.h5')
 
 def apply_brightness_contrast(input_img, brightness = -10, contrast = 64):
     if brightness != 0:
@@ -138,7 +138,7 @@ while True:
             for i in win_cards:
                 win_coords.append(returned_coords[i])
                 for i,coord in enumerate(win_coords):
-                    frame = cv2.rectangle(frame,(coord[0],coord[1]),(coord[0]+coord[2],coord[1]+coord[3]),(127,255,0),2)
+                    frame = cv2.rectangle(frame,(coord[0],coord[1]),(coord[0]+coord[2],coord[1]+coord[3]),(0,28,255),2,cv2.LINE_AA)
                     #frame = cv2.putText(frame," ".join(results.iloc[i].values),(coord[0],coord[1]+coord[3]), cv2.FONT_HERSHEY_SIMPLEX, 0.3,(255,255,255),1,cv2.LINE_AA) # for debugging
 
 

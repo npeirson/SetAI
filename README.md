@@ -4,7 +4,9 @@ Image processing and segmentation through OpenCV, neural network through Keras.
 (in active development)  
 
 [This is a kernel](https://www.kaggle.com/kwisatzhaderach/setnet-trainer/) demonstrating the network architecture and training method.  
+You're welcome to try using [my dataset.](https://www.kaggle.com/kwisatzhaderach/set-cards)
 
 Screenshots:  
-![win grab](win_collage.jpg)
+![win grabs](win_collage2.jpg)
+![win grabs](win_collage.jpg)
 ![screen grab](set_example.jpg)  
